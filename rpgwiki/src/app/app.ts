@@ -3,6 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { Personagem } from './models/personagem';
 import { PersonagemService } from './services/personagem.service';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 //Prime NG
 import { InputTextModule } from 'primeng/inputtext';
@@ -14,7 +15,8 @@ import { TableModule } from 'primeng/table';
 @Component({
   selector: 'app-root',
   imports: [
-      FormsModule,       
+      FormsModule,  
+      CommonModule,     
       InputTextModule,   
       ButtonModule,      
       CheckboxModule,    
