@@ -1,5 +1,4 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component } from '@angular/core';
 import { Personagem } from './models/personagem';
 import { PersonagemService } from './services/personagem.service';
 import { FormsModule } from '@angular/forms';
@@ -9,27 +8,36 @@ import { CommonModule } from '@angular/common';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
-import { TableModule } from 'primeng/table';
+import { CardModule } from 'primeng/card';
 
 
 @Component({
   selector: 'app-root',
+  standalone: true,
   imports: [
-      FormsModule,  
-      CommonModule,     
-      InputTextModule,   
-      ButtonModule,      
-      CheckboxModule,    
-      TableModule       
-    ],
-  templateUrl: './app.html',
-  styleUrl: './app.css'
+    CommonModule,
+    FormsModule,
+    InputTextModule,
+    ButtonModule,
+    CheckboxModule,
+    CardModule
+  ],
+  templateUrl: './app.html'
 })
 export class App {
 
   personagens: Personagem[] = [];
 
-  novo: Personagem = { id: 0, nome: '', nivel: 1, ativo: true };
+  novo: Personagem = {
+    id: 0,
+    nome: '',
+    nivel: 1,
+    ativo: true,
+    classe: '',
+    descricao: '',
+    imagem: ''
+  };
+
   editando = false;
 
   constructor(private service: PersonagemService) {
@@ -37,18 +45,14 @@ export class App {
   }
 
   carregar() {
-    this.personagens = this.service.listar();
+    this.personagens = [...this.service.listar()];
   }
 
   salvar() {
     if (this.editando) {
       this.service.atualizar(this.novo);
     } else {
-      this.service.adicionar({
-        nome: this.novo.nome,
-        nivel: this.novo.nivel,
-        ativo: this.novo.ativo
-      });
+      this.service.adicionar({ ...this.novo });
     }
 
     this.resetar();
@@ -66,7 +70,15 @@ export class App {
   }
 
   resetar() {
-    this.novo = { id: 0, nome: '', nivel: 1, ativo: true };
+    this.novo = {
+      id: 0,
+      nome: '',
+      nivel: 1,
+      ativo: true,
+      classe: '',
+      descricao: '',
+      imagem: ''
+    };
     this.editando = false;
   }
 }
