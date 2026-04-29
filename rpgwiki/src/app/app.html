@@ -1,97 +1,183 @@
-
-
 <div class="min-h-screen bg-gray-100 p-6">
 
   <!-- HEADER -->
   <div class="mb-6">
     <h1 class="text-3xl font-bold text-gray-800">RPG Wiki</h1>
-    <p class="text-gray-500">Gerenciamento de Personagens</p>
+    <p class="text-gray-500">Personagens</p>
   </div>
 
-  <!-- FORM -->
   <div class="bg-white p-6 rounded-2xl shadow-md mb-6">
-    <h2 class="text-xl font-semibold mb-4">
-      {{ editando ? 'Editar Personagem' : 'Novo Personagem' }}
-    </h2>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+  <h2 class="text-xl font-semibold mb-6">
+    {{ editando ? 'Editar Personagem' : 'Novo Personagem' }}
+  </h2>
 
-      <div>
-        <label class="block text-sm text-gray-600 mb-1">Nome</label>
-        <input pInputText [(ngModel)]="novo.nome" class="w-full" />
-      </div>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-      <div>
-        <label class="block text-sm text-gray-600 mb-1">Nível</label>
-        <input type="number" pInputText [(ngModel)]="novo.nivel" class="w-full" />
-      </div>
-
-      <div class="flex items-end">
-        <p-checkbox [(ngModel)]="novo.ativo" binary="true" label="Ativo"></p-checkbox>
-      </div>
-
+    <!-- NOME -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">
+        Nome do personagem
+      </label>
+      <input 
+        pInputText 
+        [(ngModel)]="novo.nome"
+        placeholder="Ex: Arthas"
+        class="w-full">
     </div>
 
-    <div class="mt-4 flex gap-2">
-      <button pButton label="Salvar" icon="pi pi-check" (click)="salvar()"></button>
-
-      <button 
-        pButton 
-        label="Cancelar" 
-        icon="pi pi-times"
-        class="p-button-secondary"
-        (click)="resetar()">
-      </button>
+    <!-- NÍVEL -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">
+        Nível
+      </label>
+      <input 
+        type="number"
+        pInputText 
+        [(ngModel)]="novo.nivel"
+        placeholder="Ex: 10"
+        class="w-full">
     </div>
+
+    <!-- CLASSE -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">
+        Classe
+      </label>
+      <input 
+        pInputText 
+        [(ngModel)]="novo.classe"
+        placeholder="Ex: Guerreiro, Mago..."
+        class="w-full">
+    </div>
+
+    <!-- IMAGEM -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">
+        URL da imagem
+      </label>
+      <input 
+        pInputText 
+        [(ngModel)]="novo.imagem"
+        placeholder="https://..."
+        class="w-full">
+    </div>
+
+    <!-- DESCRIÇÃO -->
+    <div class="md:col-span-2">
+      <label class="block text-sm font-medium text-gray-700 mb-2">
+        Descrição
+       </label>
+
+      <textarea 
+        pInputTextarea
+        [(ngModel)]="novo.descricao"
+        rows="4"
+        placeholder="Conte a história, personalidade ou detalhes do personagem..."
+        class="w-full p-3 border border-gray-300 rounded-lg 
+              text-gray-900 bg-white
+              focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+              resize-none">
+      </textarea>
+    </div>
+
+    <!-- ATIVO -->
+    <div class="md:col-span-2">
+      <label class="block text-sm font-medium text-gray-700 mb-2">
+        Status do personagem
+      </label>
+
+      <div class="flex items-center gap-3 bg-gray-50 p-3 rounded-lg">
+        <p-checkbox 
+          [(ngModel)]="novo.ativo" 
+          binary="true">
+        </p-checkbox>
+
+        <span class="text-sm text-gray-700">
+          Personagem está ativo na campanha
+        </span>
+      </div>
+    </div>
+
   </div>
 
-  <!-- TABELA -->
-  <div class="bg-white p-6 rounded-2xl shadow-md">
-    <h2 class="text-xl font-semibold mb-4">Lista de Personagens</h2>
+  <!-- BOTÕES -->
+  <div class="mt-6 flex gap-3">
+    <button 
+      pButton 
+      label="Salvar"
+      icon="pi pi-check"
+      (click)="salvar()">
+    </button>
 
-    <p-table [value]="personagens" [paginator]="true" [rows]="5" class="p-datatable-sm">
-
-      <ng-template pTemplate="header">
-        <tr>
-          <th>Nome</th>
-          <th>Nível</th>
-          <th>Status</th>
-          <th class="text-center">Ações</th>
-        </tr>
-      </ng-template>
-
-      <ng-template pTemplate="body" let-p>
-        <tr>
-          <td class="font-medium">{{ p.nome }}</td>
-          <td>{{ p.nivel }}</td>
-          <td>
-            <span 
-              class="px-2 py-1 rounded text-xs font-semibold"
-              [ngClass]="p.ativo ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'">
-              {{ p.ativo ? 'Ativo' : 'Inativo' }}
-            </span>
-          </td>
-
-          <td class="flex gap-2 justify-center">
-            <button 
-              pButton 
-              icon="pi pi-pencil"
-              class="p-button-text"
-              (click)="editar(p)">
-            </button>
-
-            <button 
-              pButton 
-              icon="pi pi-trash"
-              class="p-button-text p-button-danger"
-              (click)="remover(p.id)">
-            </button>
-          </td>
-        </tr>
-      </ng-template>
-
-    </p-table>
+    <button 
+      pButton 
+      label="Cancelar"
+      class="p-button-secondary"
+      (click)="resetar()">
+    </button>
   </div>
 
 </div>
 
+  <!-- CARDS -->
+ <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+  <div 
+    *ngFor="let p of personagens"
+    class="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition duration-300">
+
+    <!-- IMAGEM -->
+    <div class="relative">
+      <img 
+        [src]="p.imagem || 'https://via.placeholder.com/300'"
+        class="w-full h-48 object-cover">
+
+      <!-- STATUS -->
+      <span 
+        class="absolute top-2 right-2 px-2 py-1 text-xs font-semibold rounded"
+        [ngClass]="p.ativo 
+          ? 'bg-green-500 text-white' 
+          : 'bg-red-500 text-white'">
+        {{ p.ativo ? 'Ativo' : 'Inativo' }}
+      </span>
+    </div>
+
+    <!-- CONTEÚDO -->
+    <div class="p-4">
+
+      <h2 class="text-xl font-bold text-gray-800">
+        {{ p.nome }}
+      </h2>
+
+      <p class="text-sm text-gray-500 mb-2">
+        {{ p.classe }} • Nível {{ p.nivel }}
+      </p>
+
+      <p class="text-gray-600 text-sm mb-4 line-clamp-3">
+        {{ p.descricao }}
+      </p>
+
+      <!-- AÇÕES -->
+      <div class="flex justify-between">
+
+        <button 
+          pButton 
+          icon="pi pi-pencil"
+          class="p-button-text"
+          (click)="editar(p)">
+        </button>
+
+        <button 
+          pButton 
+          icon="pi pi-trash"
+          class="p-button-text p-button-danger"
+          (click)="remover(p.id)">
+        </button>
+
+      </div>
+
+    </div>
+  </div>
+
+</div>
