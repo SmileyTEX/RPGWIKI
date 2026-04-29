@@ -1,5 +1,3 @@
-import { Image } from "primeng/image";
-
 export interface Personagem {
   id: number;
   nome: string;
