@@ -1,6 +1,11 @@
+import { Image } from "primeng/image";
+
 export interface Personagem {
   id: number;
-  nome: string;     
-  nivel: number;    
-  ativo: boolean;  
+  nome: string;
+  nivel: number;
+  ativo: boolean;
+  classe: string;
+  descricao: string;
+  imagem: string; 
 }
