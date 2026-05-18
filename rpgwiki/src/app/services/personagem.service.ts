@@ -5,7 +5,6 @@ import { Personagem } from '../models/personagem';
   providedIn: 'root'
 })
 export class PersonagemService {
-
   private personagens: Personagem[] = [];
   private nextId = 1;
 
@@ -13,19 +12,14 @@ export class PersonagemService {
     this.carregarDoLocalStorage();
   }
 
-  
   private carregarDoLocalStorage() {
     const dados = localStorage.getItem('personagens');
 
     if (dados) {
       this.personagens = JSON.parse(dados);
-
-     
       const maiorId = this.personagens.reduce((max, p) => p.id > max ? p.id : max, 0);
       this.nextId = maiorId + 1;
-
     } else {
-      
       this.personagens = [
         {
           id: 1,
@@ -42,7 +36,6 @@ export class PersonagemService {
     }
   }
 
-  
   private salvarNoLocalStorage() {
     localStorage.setItem('personagens', JSON.stringify(this.personagens));
   }
@@ -53,19 +46,19 @@ export class PersonagemService {
 
   adicionar(p: Omit<Personagem, 'id'>) {
     this.personagens.push({ ...p, id: this.nextId++ });
-    this.salvarNoLocalStorage(); 
+    this.salvarNoLocalStorage();
   }
 
   atualizar(p: Personagem) {
     const i = this.personagens.findIndex(x => x.id === p.id);
     if (i !== -1) {
       this.personagens[i] = p;
-      this.salvarNoLocalStorage(); 
+      this.salvarNoLocalStorage();
     }
   }
 
   remover(id: number) {
     this.personagens = this.personagens.filter(p => p.id !== id);
-    this.salvarNoLocalStorage(); 
+    this.salvarNoLocalStorage();
   }
 }
