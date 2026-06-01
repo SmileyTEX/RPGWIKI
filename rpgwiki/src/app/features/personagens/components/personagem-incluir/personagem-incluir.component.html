@@ -1,0 +1,143 @@
+<div class="bg-rpg-surface border border-rpg-border p-6 rounded-2xl">
+  <h2 class="text-xl font-semibold text-rpg-text mb-6 flex items-center gap-2">
+    <i class="pi pi-user-plus text-rpg-orange"></i>
+    Novo Personagem
+  </h2>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div>
+      <label class="form-label">Nome do personagem</label>
+      <input pInputText [formField]="personagemForm.nome" placeholder="Ex: Arthas" class="w-full" />
+      @if (personagemForm.nome().touched() && personagemForm.nome().invalid()) {
+        <small class="form-error">{{ personagemForm.nome().errors()[0]?.message }}</small>
+      }
+    </div>
+
+    <div>
+      <label class="form-label">Nível</label>
+      <input type="number" pInputText [formField]="personagemForm.nivel" placeholder="Ex: 10" class="w-full" />
+      @if (personagemForm.nivel().touched() && personagemForm.nivel().invalid()) {
+        <small class="form-error">{{ personagemForm.nivel().errors()[0]?.message }}</small>
+      }
+    </div>
+
+    <div>
+      <label class="form-label">Classe</label>
+      <input pInputText [formField]="personagemForm.classe" placeholder="Ex: Guerreiro, Mago..." class="w-full" />
+      @if (personagemForm.classe().touched() && personagemForm.classe().invalid()) {
+        <small class="form-error">{{ personagemForm.classe().errors()[0]?.message }}</small>
+      }
+    </div>
+
+    <div>
+      <label class="form-label">Tipo</label>
+      <p-select
+        [options]="tiposPersonagem"
+        optionLabel="label"
+        optionValue="value"
+        [ngModel]="model().tipo"
+        (ngModelChange)="alterarTipo($event)"
+        placeholder="Selecione o tipo"
+        class="w-full"
+      />
+      @if (personagemForm.tipo().touched() && personagemForm.tipo().invalid()) {
+        <small class="form-error">{{ personagemForm.tipo().errors()[0]?.message }}</small>
+      }
+    </div>
+
+    <div>
+      <label class="form-label">Raça</label>
+      <input pInputText [formField]="personagemForm.raca" placeholder="Ex: Humano, Elfo..." class="w-full" />
+      @if (personagemForm.raca().touched() && personagemForm.raca().invalid()) {
+        <small class="form-error">{{ personagemForm.raca().errors()[0]?.message }}</small>
+      }
+    </div>
+
+    <div>
+      <label class="form-label">Alinhamento</label>
+      <input pInputText [formField]="personagemForm.alinhamento" placeholder="Ex: Leal Neutro" class="w-full" />
+      @if (personagemForm.alinhamento().touched() && personagemForm.alinhamento().invalid()) {
+        <small class="form-error">{{ personagemForm.alinhamento().errors()[0]?.message }}</small>
+      }
+    </div>
+
+    <div>
+      <label class="form-label">Idade</label>
+      <input type="number" pInputText [formField]="personagemForm.idade" placeholder="Ex: 25" class="w-full" />
+      @if (personagemForm.idade().touched() && personagemForm.idade().invalid()) {
+        <small class="form-error">{{ personagemForm.idade().errors()[0]?.message }}</small>
+      }
+    </div>
+
+    <div>
+      <label class="form-label">Origem / Local</label>
+      <input pInputText [formField]="personagemForm.local" placeholder="Ex: Lordaeron" class="w-full" />
+      @if (personagemForm.local().touched() && personagemForm.local().invalid()) {
+        <small class="form-error">{{ personagemForm.local().errors()[0]?.message }}</small>
+      }
+    </div>
+
+    <div>
+      <label class="form-label">Facção</label>
+      <input pInputText [formField]="personagemForm.faccao" placeholder="Ex: Ordem da Prata" class="w-full" />
+      @if (personagemForm.faccao().touched() && personagemForm.faccao().invalid()) {
+        <small class="form-error">{{ personagemForm.faccao().errors()[0]?.message }}</small>
+      }
+    </div>
+
+    <div>
+      <label class="form-label">Campanha</label>
+      <input pInputText [formField]="personagemForm.campanha" placeholder="Ex: Queda de Lordaeron" class="w-full" />
+      @if (personagemForm.campanha().touched() && personagemForm.campanha().invalid()) {
+        <small class="form-error">{{ personagemForm.campanha().errors()[0]?.message }}</small>
+      }
+    </div>
+
+    <div class="md:col-span-2">
+      <label class="form-label">URL da imagem</label>
+      <input pInputText [formField]="personagemForm.imagem" placeholder="https://..." class="w-full" />
+      @if (personagemForm.imagem().touched() && personagemForm.imagem().invalid()) {
+        <small class="form-error">{{ personagemForm.imagem().errors()[0]?.message }}</small>
+      }
+    </div>
+
+    <div class="md:col-span-2">
+      <label class="form-label">Antecedente</label>
+      <textarea
+        [formField]="personagemForm.antecedente"
+        rows="3"
+        placeholder="Histórico, profissão anterior, eventos marcantes..."
+        class="form-textarea">
+      </textarea>
+      @if (personagemForm.antecedente().touched() && personagemForm.antecedente().invalid()) {
+        <small class="form-error">{{ personagemForm.antecedente().errors()[0]?.message }}</small>
+      }
+    </div>
+
+    <div class="md:col-span-2">
+      <label class="form-label">Biografia / Descrição</label>
+      <textarea
+        [formField]="personagemForm.descricao"
+        rows="4"
+        placeholder="Conte a história, personalidade e detalhes do personagem..."
+        class="form-textarea">
+      </textarea>
+      @if (personagemForm.descricao().touched() && personagemForm.descricao().invalid()) {
+        <small class="form-error">{{ personagemForm.descricao().errors()[0]?.message }}</small>
+      }
+    </div>
+
+    <div class="md:col-span-2">
+      <label class="form-label">Status do personagem</label>
+      <div class="flex items-center gap-3 bg-rpg-bg p-3 rounded-lg border border-rpg-border">
+        <input type="checkbox" [checked]="model().ativo" (change)="alterarStatusAtivo($event)" class="accent-rpg-orange" />
+        <span class="text-sm text-rpg-text">Personagem está ativo na campanha</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-6 flex gap-3">
+    <button pButton label="Salvar" icon="pi pi-check" (click)="onSalvar()" [disabled]="personagemForm().invalid()"></button>
+    <button pButton label="Cancelar" class="p-button-outlined" (click)="cancelar.emit()"></button>
+  </div>
+</div>
