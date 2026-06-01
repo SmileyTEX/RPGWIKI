@@ -1,215 +1,25 @@
-<div class="min-h-screen bg-gray-100 p-6">
-
-  <!-- HEADER -->
-  <div class="mb-6">
-    <h1 class="text-3xl font-bold text-gray-800">RPG Wiki</h1>
-    <p class="text-gray-500">Personagens</p>
-  </div>
-
-  <!-- FORMULÁRIO -->
-  <div class="bg-white p-6 rounded-2xl shadow-md mb-6">
-
-    <h2 class="text-xl font-semibold mb-6">
-      {{ editando ? 'Editar Personagem' : 'Novo Personagem' }}
-    </h2>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-      <!-- NOME -->
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">
-          Nome do personagem
-        </label>
-
-        <input
-          pInputText
-          [formField]="personagemForm.nome"
-          placeholder="Ex: Arthas"
-          class="w-full"
-        />
-
-        @if (personagemForm.nome().touched() && personagemForm.nome().invalid()) {
-          <small class="text-red-500 mt-1 block">
-            {{ personagemForm.nome().errors()[0]?.message }}
-          </small>
-        }
-      </div>
-
-      <!-- NÍVEL -->
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">
-          Nível
-        </label>
-
-        <input
-          type="number"
-          pInputText
-          [formField]="personagemForm.nivel"
-          placeholder="Ex: 10"
-          class="w-full"
-        />
-
-        @if (personagemForm.nivel().touched() && personagemForm.nivel().invalid()) {
-          <small class="text-red-500 mt-1 block">
-            {{ personagemForm.nivel().errors()[0]?.message }}
-          </small>
-        }
-      </div>
-
-      <!-- CLASSE -->
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">
-          Classe
-        </label>
-
-        <input
-          pInputText
-          [formField]="personagemForm.classe"
-          placeholder="Ex: Guerreiro, Mago..."
-          class="w-full"
-        />
-
-        @if (personagemForm.classe().touched() && personagemForm.classe().invalid()) {
-          <small class="text-red-500 mt-1 block">
-            {{ personagemForm.classe().errors()[0]?.message }}
-          </small>
-        }
-      </div>
-
-      <!-- URL DA IMAGEM -->
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">
-          URL da imagem
-        </label>
-
-        <input
-          pInputText
-          [formField]="personagemForm.imagem"
-          placeholder="https://..."
-          class="w-full"
-        />
-
-        @if (personagemForm.imagem().touched() && personagemForm.imagem().invalid()) {
-          <small class="text-red-500 mt-1 block">
-            {{ personagemForm.imagem().errors()[0]?.message }}
-          </small>
-        }
-      </div>
-
-      <!-- DESCRIÇÃO -->
-      <div class="md:col-span-2">
-        <label class="block text-sm font-medium text-gray-700 mb-2">
-          Descrição
-        </label>
-
-        <textarea
-          [formField]="personagemForm.descricao"
-          rows="4"
-          placeholder="Conte a história, personalidade ou detalhes do personagem..."
-          class="w-full p-3 border border-gray-300 rounded-lg
-                 text-gray-900 bg-white
-                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
-                 resize-none">
-        </textarea>
-
-        @if (personagemForm.descricao().touched() && personagemForm.descricao().invalid()) {
-          <small class="text-red-500 mt-1 block">
-            {{ personagemForm.descricao().errors()[0]?.message }}
-          </small>
-        }
-      </div>
-
-      <!-- ATIVO -->
-      <div class="md:col-span-2">
-        <label class="block text-sm font-medium text-gray-700 mb-2">
-          Status do personagem
-        </label>
-
-        <div class="flex items-center gap-3 bg-gray-50 p-3 rounded-lg">
-          <input
-            type="checkbox"
-            [checked]="model().ativo"
-            (change)="alterarStatusAtivo($event)"
-            class="h-4 w-4"
-          />
-
-          <span class="text-sm text-gray-700">
-            Personagem está ativo na campanha
-          </span>
+<div class="min-h-screen bg-rpg-bg">
+  <header class="border-b border-rpg-border bg-rpg-surface/80 backdrop-blur-sm sticky top-0 z-10">
+    <div class="max-w-7xl mx-auto px-6 py-4">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-lg bg-rpg-orange/20 border border-rpg-orange/40 flex items-center justify-center">
+          <i class="pi pi-book text-rpg-orange text-lg"></i>
         </div>
-      </div>
-
-    </div>
-
-    <!-- BOTÕES -->
-    <div class="mt-6 flex gap-3">
-      <button
-        pButton
-        label="Salvar"
-        icon="pi pi-check"
-        (click)="salvar()"
-        [disabled]="personagemForm().invalid()">
-      </button>
-
-      <button
-        pButton
-        label="Cancelar"
-        class="p-button-secondary"
-        (click)="resetar()">
-      </button>
-    </div>
-  </div>
-
-  <!-- CARDS -->
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    <div
-      *ngFor="let p of personagens"
-      class="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition duration-300">
-
-      <div class="relative">
-        <img
-          [src]="p.imagem || 'https://via.placeholder.com/300'"
-          class="w-full h-auto object-cover bg-gray-100"
-          alt="Imagem do personagem"
-        />
-
-        <span
-          class="absolute top-2 right-2 px-2 py-1 text-xs font-semibold rounded"
-          [ngClass]="p.ativo ? 'bg-green-500 text-white' : 'bg-red-500 text-white'">
-          {{ p.ativo ? 'Ativo' : 'Inativo' }}
-        </span>
-      </div>
-
-      <div class="p-4">
-        <h2 class="text-xl font-bold text-gray-800">
-          {{ p.nome }}
-        </h2>
-
-        <p class="text-sm text-gray-500 mb-2">
-          {{ p.classe }} • Nível {{ p.nivel }}
-        </p>
-
-        <p class="text-gray-600 text-sm mb-4 line-clamp-3">
-          {{ p.descricao }}
-        </p>
-
-        <div class="flex justify-between">
-          <button
-            pButton
-            icon="pi pi-pencil"
-            class="p-button-text"
-            (click)="editar(p)">
-          </button>
-
-          <button
-            pButton
-            icon="pi pi-trash"
-            class="p-button-text p-button-danger"
-            (click)="remover(p.id)">
-          </button>
+        <div>
+          <h1 class="text-2xl font-bold text-rpg-text tracking-tight">RPG Wiki</h1>
+          <p class="text-sm text-rpg-muted">Enciclopédia das campanhas · Personagens</p>
         </div>
       </div>
     </div>
-  </div>
+  </header>
 
+  <main class="max-w-7xl mx-auto px-6 py-8">
+    <app-personagens />
+  </main>
+
+  <footer class="border-t border-rpg-border mt-12">
+    <div class="max-w-7xl mx-auto px-6 py-4 text-center text-xs text-rpg-muted">
+      RPG Wiki — Centralizando o conhecimento do universo compartilhado do grupo
+    </div>
+  </footer>
 </div>

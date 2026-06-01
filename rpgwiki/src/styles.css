@@ -1,3 +1,129 @@
-/* You can add global styles to this file, and also import other style files */
-
 @import 'tailwindcss';
+@import 'primeicons/primeicons.css';
+
+@theme {
+  --color-rpg-bg: #0a0a0c;
+  --color-rpg-surface: #141418;
+  --color-rpg-border: #2a2a32;
+  --color-rpg-orange: #f97316;
+  --color-rpg-orange-light: #fb923c;
+  --color-rpg-orange-dark: #ea580c;
+  --color-rpg-text: #e4e4e7;
+  --color-rpg-muted: #71717a;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-rpg-bg);
+  color: var(--color-rpg-text);
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-rpg-text);
+  margin-bottom: 0.25rem;
+}
+
+.form-error {
+  display: block;
+  color: #f87171;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.form-textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--color-rpg-border);
+  border-radius: 0.5rem;
+  background-color: var(--color-rpg-bg);
+  color: var(--color-rpg-text);
+  resize: none;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-textarea:focus {
+  border-color: var(--color-rpg-orange);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-rpg-orange) 25%, transparent);
+}
+
+.info-box {
+  background-color: var(--color-rpg-bg);
+  border: 1px solid var(--color-rpg-border);
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+}
+
+.info-label {
+  display: block;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-rpg-muted);
+  margin-bottom: 0.25rem;
+}
+
+.info-value {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-rpg-text);
+}
+
+.section-title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-rpg-orange);
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid var(--color-rpg-border);
+}
+
+.p-inputtext,
+.p-select,
+.p-textarea {
+  background-color: var(--color-rpg-bg) !important;
+  border-color: var(--color-rpg-border) !important;
+  color: var(--color-rpg-text) !important;
+}
+
+.p-inputtext:focus,
+.p-select:focus-within {
+  border-color: var(--color-rpg-orange) !important;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-rpg-orange) 25%, transparent) !important;
+}
+
+.p-button:not(.p-button-text):not(.p-button-outlined) {
+  background-color: var(--color-rpg-orange) !important;
+  border-color: var(--color-rpg-orange) !important;
+}
+
+.p-button:not(.p-button-text):not(.p-button-outlined):hover {
+  background-color: var(--color-rpg-orange-dark) !important;
+  border-color: var(--color-rpg-orange-dark) !important;
+}
+
+.p-button-outlined {
+  border-color: var(--color-rpg-border) !important;
+  color: var(--color-rpg-text) !important;
+}
+
+.p-button-outlined:hover {
+  border-color: var(--color-rpg-orange) !important;
+  color: var(--color-rpg-orange) !important;
+  background-color: transparent !important;
+}
+
+.p-toggleswitch.p-toggleswitch-checked .p-toggleswitch-slider {
+  background-color: var(--color-rpg-orange) !important;
+}
