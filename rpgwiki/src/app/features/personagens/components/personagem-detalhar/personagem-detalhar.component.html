@@ -1,0 +1,102 @@
+<div class="mb-6">
+  <button
+    pButton
+    label="Voltar"
+    icon="pi pi-arrow-left"
+    class="p-button-text !text-rpg-muted hover:!text-rpg-orange"
+    (click)="voltar.emit()">
+  </button>
+</div>
+
+<article class="bg-rpg-surface border border-rpg-border rounded-2xl overflow-hidden">
+  <div class="grid grid-cols-1 lg:grid-cols-5 gap-0">
+    <div class="lg:col-span-2 relative">
+      <img
+        [src]="personagem().imagem || 'https://via.placeholder.com/500x700/16161a/f97316?text=RPG+Wiki'"
+        [alt]="'Retrato de ' + personagem().nome"
+        class="w-full h-full min-h-[320px] object-cover"
+      />
+      <div class="absolute inset-0 bg-gradient-to-r from-transparent to-rpg-surface/80 hidden lg:block"></div>
+    </div>
+
+    <div class="lg:col-span-3 p-6 lg:p-8">
+      <div class="flex flex-wrap items-start justify-between gap-4 mb-6">
+        <div>
+          <div class="flex flex-wrap gap-2 mb-3">
+            <p-tag
+              [value]="personagem().tipo === 'jogador' ? 'Personagem Jogador' : 'NPC'"
+              [severity]="personagem().tipo === 'jogador' ? 'warn' : 'info'"
+            />
+            <p-tag
+              [value]="personagem().ativo ? 'Ativo' : 'Inativo'"
+              [severity]="personagem().ativo ? 'success' : 'danger'"
+            />
+          </div>
+
+          <h1 class="text-3xl font-bold text-rpg-text">{{ personagem().nome }}</h1>
+          <p class="text-rpg-orange-light text-lg mt-1">
+            {{ personagem().classe }} · Nível {{ personagem().nivel }}
+          </p>
+        </div>
+
+        <button
+          pButton
+          label="Editar"
+          icon="pi pi-pencil"
+          (click)="editar.emit(personagem())">
+        </button>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+        @if (personagem().raca) {
+          <div class="info-box">
+            <span class="info-label">Raça</span>
+            <span class="info-value">{{ personagem().raca }}</span>
+          </div>
+        }
+        @if (personagem().alinhamento) {
+          <div class="info-box">
+            <span class="info-label">Alinhamento</span>
+            <span class="info-value">{{ personagem().alinhamento }}</span>
+          </div>
+        }
+        @if (personagem().idade !== null) {
+          <div class="info-box">
+            <span class="info-label">Idade</span>
+            <span class="info-value">{{ personagem().idade }} anos</span>
+          </div>
+        }
+        @if (personagem().local) {
+          <div class="info-box">
+            <span class="info-label">Origem</span>
+            <span class="info-value">{{ personagem().local }}</span>
+          </div>
+        }
+        @if (personagem().faccao) {
+          <div class="info-box">
+            <span class="info-label">Facção</span>
+            <span class="info-value">{{ personagem().faccao }}</span>
+          </div>
+        }
+        @if (personagem().campanha) {
+          <div class="info-box">
+            <span class="info-label">Campanha</span>
+            <span class="info-value">{{ personagem().campanha }}</span>
+          </div>
+        }
+      </div>
+
+      @if (personagem().antecedente) {
+        <section class="mb-6">
+          <h2 class="section-title">Antecedente</h2>
+          <p class="text-rpg-text/80 leading-relaxed">{{ personagem().antecedente }}</p>
+        </section>
+      }
+
+      <section>
+        <h2 class="section-title">Biografia</h2>
+        <p class="text-rpg-text/80 leading-relaxed whitespace-pre-line">{{ personagem().descricao }}</p>
+      </section>
+    </div>
+  </div>
+</article>
