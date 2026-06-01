@@ -1,0 +1,35 @@
+<div class="flex items-center justify-between mb-6">
+  <div>
+    <h2 class="text-xl font-semibold text-rpg-text">Enciclopédia de Personagens</h2>
+    <p class="text-sm text-rpg-muted mt-1">
+      {{ personagens().length }} {{ personagens().length === 1 ? 'entrada registrada' : 'entradas registradas' }}
+    </p>
+  </div>
+
+  <button
+    pButton
+    label="Novo Personagem"
+    icon="pi pi-plus"
+    (click)="incluir.emit()">
+  </button>
+</div>
+
+@if (personagens().length === 0) {
+  <div class="text-center py-16 border border-dashed border-rpg-border rounded-xl">
+    <i class="pi pi-users text-4xl text-rpg-muted mb-4"></i>
+    <p class="text-rpg-muted mb-4">Nenhum personagem cadastrado ainda.</p>
+    <button pButton label="Cadastrar primeiro personagem" icon="pi pi-plus" (click)="incluir.emit()"></button>
+  </div>
+} @else {
+  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+    @for (p of personagens(); track p.id) {
+      <app-personagem-card
+        [personagem]="p"
+        (detalhar)="detalhar.emit($event)"
+        (editar)="editar.emit($event)"
+        (remover)="remover.emit($event)"
+        (statusAlterado)="statusAlterado.emit($event)"
+      />
+    }
+  </div>
+}
