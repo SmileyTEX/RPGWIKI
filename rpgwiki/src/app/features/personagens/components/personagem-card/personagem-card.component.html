@@ -1,0 +1,92 @@
+<article
+  class="group bg-rpg-surface border border-rpg-border rounded-xl overflow-hidden
+         hover:border-rpg-orange/50 hover:shadow-lg hover:shadow-rpg-orange/10
+         transition-all duration-300 cursor-pointer"
+  (click)="detalhar.emit(personagem())">
+
+  <div class="relative aspect-[4/3] overflow-hidden">
+    <img
+      [src]="personagem().imagem || 'https://via.placeholder.com/400x300/16161a/f97316?text=RPG+Wiki'"
+      [alt]="'Retrato de ' + personagem().nome"
+      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+    />
+
+    <div class="absolute inset-0 bg-gradient-to-t from-rpg-bg/90 via-transparent to-transparent"></div>
+
+    <div class="absolute top-3 left-3 flex gap-2">
+      <span
+        class="px-2 py-0.5 text-xs font-semibold rounded-full uppercase tracking-wide"
+        [class]="personagem().tipo === 'jogador'
+          ? 'bg-rpg-orange/90 text-white'
+          : 'bg-purple-600/90 text-white'">
+        {{ personagem().tipo === 'jogador' ? 'PC' : 'NPC' }}
+      </span>
+    </div>
+
+    <div class="absolute top-3 right-3" (click)="$event.stopPropagation()">
+      <p-toggleswitch
+        [ngModel]="personagem().ativo"
+        (ngModelChange)="onStatusChange($event)"
+        ariaLabel="Alternar status ativo"
+      />
+    </div>
+
+    <div class="absolute bottom-3 left-3 right-3">
+      <h3 class="text-lg font-bold text-white drop-shadow-lg">{{ personagem().nome }}</h3>
+      <p class="text-sm text-rpg-orange-light">{{ personagem().classe }} · Nv. {{ personagem().nivel }}</p>
+    </div>
+  </div>
+
+  <div class="p-4 space-y-3">
+    @if (personagem().raca || personagem().faccao) {
+      <div class="flex flex-wrap gap-2">
+        @if (personagem().raca) {
+          <span class="text-xs px-2 py-1 rounded-md bg-rpg-bg text-rpg-muted border border-rpg-border">
+            {{ personagem().raca }}
+          </span>
+        }
+        @if (personagem().faccao) {
+          <span class="text-xs px-2 py-1 rounded-md bg-rpg-bg text-rpg-muted border border-rpg-border">
+            {{ personagem().faccao }}
+          </span>
+        }
+      </div>
+    }
+
+    <p class="text-sm text-rpg-text/80 line-clamp-2 leading-relaxed">
+      {{ personagem().descricao }}
+    </p>
+
+    <div class="flex items-center justify-between pt-2 border-t border-rpg-border" (click)="$event.stopPropagation()">
+      <span
+        class="text-xs font-medium"
+        [class]="personagem().ativo ? 'text-emerald-400' : 'text-red-400'">
+        {{ personagem().ativo ? '● Ativo na campanha' : '○ Inativo' }}
+      </span>
+
+      <div class="flex gap-1">
+        <button
+          pButton
+          icon="pi pi-eye"
+          class="p-button-text p-button-sm !text-rpg-muted hover:!text-rpg-orange"
+          (click)="detalhar.emit(personagem())"
+          aria-label="Ver detalhes">
+        </button>
+        <button
+          pButton
+          icon="pi pi-pencil"
+          class="p-button-text p-button-sm !text-rpg-muted hover:!text-rpg-orange"
+          (click)="editar.emit(personagem())"
+          aria-label="Editar personagem">
+        </button>
+        <button
+          pButton
+          icon="pi pi-trash"
+          class="p-button-text p-button-sm p-button-danger"
+          (click)="remover.emit(personagem().id)"
+          aria-label="Remover personagem">
+        </button>
+      </div>
+    </div>
+  </div>
+</article>
