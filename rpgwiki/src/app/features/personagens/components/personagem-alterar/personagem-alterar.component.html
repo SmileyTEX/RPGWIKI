@@ -1,9 +1,10 @@
+@if (personagem(); as p) {
 <div class="bg-rpg-surface border border-rpg-border p-6 rounded-2xl">
   <h2 class="text-xl font-semibold text-rpg-text mb-2 flex items-center gap-2">
     <i class="pi pi-pencil text-rpg-orange"></i>
     Editar Personagem
   </h2>
-  <p class="text-sm text-rpg-muted mb-6">Alterando: <span class="text-rpg-orange-light">{{ personagem().nome }}</span></p>
+  <p class="text-sm text-rpg-muted mb-6">Alterando: <span class="text-rpg-orange-light">{{ p.nome }}</span></p>
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
     <div>
@@ -139,6 +140,7 @@
 
   <div class="mt-6 flex gap-3">
     <button pButton label="Salvar alterações" icon="pi pi-check" (click)="onSalvar()" [disabled]="personagemForm().invalid()"></button>
-    <button pButton label="Cancelar" class="p-button-outlined" (click)="cancelar.emit()"></button>
+    <button pButton label="Cancelar" class="p-button-outlined" (click)="cancelar()"></button>
   </div>
 </div>
+}

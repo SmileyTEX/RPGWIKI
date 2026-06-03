@@ -1,4 +1,5 @@
-import { Component, effect, input, output, signal } from '@angular/core';
+import { Component, effect, inject, OnInit, signal } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { form, FormField, required, min, maxLength, pattern } from '@angular/forms/signals';
 import { InputTextModule } from 'primeng/inputtext';
@@ -6,7 +7,9 @@ import { ButtonModule } from 'primeng/button';
 import { SelectModule } from 'primeng/select';
 
 import { Personagem, PersonagemPayload } from '../../../../models/personagem';
+import { lerOrigemDoState, lerPersonagemDoState } from '../../../../models/personagem-route-state';
 import { TIPOS_PERSONAGEM } from '../../../../models/tipo-personagem';
+import { PersonagemService } from '../../../../services/personagem.service';
 
 @Component({
   selector: 'app-personagem-alterar',
@@ -14,11 +17,13 @@ import { TIPOS_PERSONAGEM } from '../../../../models/tipo-personagem';
   imports: [FormsModule, FormField, InputTextModule, ButtonModule, SelectModule],
   templateUrl: './personagem-alterar.component.html'
 })
-export class PersonagemAlterarComponent {
-  personagem = input.required<Personagem>();
+export class PersonagemAlterarComponent implements OnInit {
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
+  private readonly service = inject(PersonagemService);
 
-  salvar = output<Personagem>();
-  cancelar = output<void>();
+  personagem = signal<Personagem | null>(null);
+  private origem: 'listar' | 'detalhar' = 'listar';
 
   tiposPersonagem = TIPOS_PERSONAGEM;
 
@@ -62,17 +67,66 @@ export class PersonagemAlterarComponent {
   constructor() {
     effect(() => {
       const p = this.personagem();
+      if (!p) {
+        return;
+      }
       const { id: _, ...dados } = p;
       this.model.set({ ...dados });
     });
   }
 
+  ngOnInit() {
+    const id = Number(this.route.snapshot.paramMap.get('id'));
+    const fromState = lerPersonagemDoState();
+    this.origem = lerOrigemDoState();
+
+    if (fromState?.id === id) {
+      this.personagem.set(fromState);
+      return;
+    }
+
+    const encontrado = this.service.obterPorId(id);
+    if (encontrado) {
+      this.personagem.set(encontrado);
+    } else {
+      this.router.navigate(['/personagens']);
+    }
+  }
+
   onSalvar() {
+    const atual = this.personagem();
+    if (!atual) {
+      return;
+    }
     if (this.personagemForm().invalid()) {
       this.personagemForm().markAsTouched();
       return;
     }
-    this.salvar.emit({ id: this.personagem().id, ...this.model() });
+    const atualizado: Personagem = { id: atual.id, ...this.model() };
+    this.service.atualizar(atualizado);
+
+    if (this.origem === 'detalhar') {
+      this.router.navigate(['/personagens', atualizado.id, 'detalhar'], {
+        state: { personagem: atualizado }
+      });
+    } else {
+      this.router.navigate(['/personagens']);
+    }
+  }
+
+  cancelar() {
+    const atual = this.personagem();
+    if (!atual) {
+      this.router.navigate(['/personagens']);
+      return;
+    }
+    if (this.origem === 'detalhar') {
+      this.router.navigate(['/personagens', atual.id, 'detalhar'], {
+        state: { personagem: atual }
+      });
+    } else {
+      this.router.navigate(['/personagens']);
+    }
   }
 
   alterarStatusAtivo(event: Event) {
@@ -83,5 +137,4 @@ export class PersonagemAlterarComponent {
   alterarTipo(valor: PersonagemPayload['tipo']) {
     this.model.update((v) => ({ ...v, tipo: valor }));
   }
-
 }
