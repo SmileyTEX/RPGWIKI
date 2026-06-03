@@ -1,4 +1,5 @@
-import { Component, output, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { form, FormField, required, min, maxLength, pattern } from '@angular/forms/signals';
 import { InputTextModule } from 'primeng/inputtext';
@@ -7,6 +8,7 @@ import { SelectModule } from 'primeng/select';
 
 import { PersonagemPayload, criarPersonagemVazio } from '../../../../models/personagem';
 import { TIPOS_PERSONAGEM } from '../../../../models/tipo-personagem';
+import { PersonagemService } from '../../../../services/personagem.service';
 
 @Component({
   selector: 'app-personagem-incluir',
@@ -15,8 +17,8 @@ import { TIPOS_PERSONAGEM } from '../../../../models/tipo-personagem';
   templateUrl: './personagem-incluir.component.html'
 })
 export class PersonagemIncluirComponent {
-  salvar = output<PersonagemPayload>();
-  cancelar = output<void>();
+  private readonly router = inject(Router);
+  private readonly service = inject(PersonagemService);
 
   tiposPersonagem = TIPOS_PERSONAGEM;
 
@@ -47,7 +49,12 @@ export class PersonagemIncluirComponent {
       this.personagemForm().markAsTouched();
       return;
     }
-    this.salvar.emit(this.model());
+    this.service.adicionar(this.model());
+    this.router.navigate(['/personagens']);
+  }
+
+  onCancelar() {
+    this.router.navigate(['/personagens']);
   }
 
   alterarStatusAtivo(event: Event) {
@@ -58,5 +65,4 @@ export class PersonagemIncluirComponent {
   alterarTipo(valor: PersonagemPayload['tipo']) {
     this.model.update((v) => ({ ...v, tipo: valor }));
   }
-
 }

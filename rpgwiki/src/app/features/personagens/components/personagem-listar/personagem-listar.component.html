@@ -10,7 +10,7 @@
     pButton
     label="Novo Personagem"
     icon="pi pi-plus"
-    (click)="incluir.emit()">
+    (click)="irParaIncluir()">
   </button>
 </div>
 
@@ -18,17 +18,17 @@
   <div class="text-center py-16 border border-dashed border-rpg-border rounded-xl">
     <i class="pi pi-users text-4xl text-rpg-muted mb-4"></i>
     <p class="text-rpg-muted mb-4">Nenhum personagem cadastrado ainda.</p>
-    <button pButton label="Cadastrar primeiro personagem" icon="pi pi-plus" (click)="incluir.emit()"></button>
+    <button pButton label="Cadastrar primeiro personagem" icon="pi pi-plus" (click)="irParaIncluir()"></button>
   </div>
 } @else {
   <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
     @for (p of personagens(); track p.id) {
       <app-personagem-card
         [personagem]="p"
-        (detalhar)="detalhar.emit($event)"
-        (editar)="editar.emit($event)"
-        (remover)="remover.emit($event)"
-        (statusAlterado)="statusAlterado.emit($event)"
+        (detalhar)="navegarParaDetalhar($event)"
+        (editar)="navegarParaAlterar($event)"
+        (remover)="onRemover($event)"
+        (statusAlterado)="onStatusAlterado($event)"
       />
     }
   </div>
