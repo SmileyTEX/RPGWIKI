@@ -6,8 +6,13 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { SelectModule } from 'primeng/select';
 
-import { Personagem, PersonagemPayload } from '../../../../models/personagem';
-import { lerOrigemDoState, lerPersonagemDoState } from '../../../../models/personagem-route-state';
+import {
+  Personagem,
+  PersonagemPayload,
+  criarPersonagemVazio,
+  normalizarPersonagemPayload
+} from '../../../../models/personagem';
+import { lerOrigemDoState } from '../../../../models/personagem-route-state';
 import { TIPOS_PERSONAGEM } from '../../../../models/tipo-personagem';
 import { PersonagemService } from '../../../../services/personagem.service';
 
@@ -23,26 +28,14 @@ export class PersonagemAlterarComponent implements OnInit {
   private readonly service = inject(PersonagemService);
 
   personagem = signal<Personagem | null>(null);
+  carregando = signal(true);
+  salvando = signal(false);
+  erro = signal<string | null>(null);
   private origem: 'listar' | 'detalhar' = 'listar';
 
   tiposPersonagem = TIPOS_PERSONAGEM;
 
-  model = signal<PersonagemPayload>({
-    nome: '',
-    nivel: 1,
-    ativo: true,
-    classe: '',
-    descricao: '',
-    imagem: '',
-    tipo: 'jogador',
-    raca: '',
-    alinhamento: '',
-    campanha: '',
-    antecedente: '',
-    local: '',
-    faccao: '',
-    idade: null
-  });
+  model = signal<PersonagemPayload>(criarPersonagemVazio());
 
   personagemForm = form(this.model, (p) => {
     required(p.nome, { message: 'Informe o nome do personagem' });
@@ -71,47 +64,67 @@ export class PersonagemAlterarComponent implements OnInit {
         return;
       }
       const { id: _, ...dados } = p;
-      this.model.set({ ...dados });
+      this.model.set(normalizarPersonagemPayload(dados));
     });
   }
 
   ngOnInit() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
-    const fromState = lerPersonagemDoState();
     this.origem = lerOrigemDoState();
+    this.carregarPersonagem(id);
+  }
 
-    if (fromState?.id === id) {
-      this.personagem.set(fromState);
-      return;
-    }
+  private carregarPersonagem(id: number) {
+    this.carregando.set(true);
+    this.erro.set(null);
 
-    const encontrado = this.service.obterPorId(id);
-    if (encontrado) {
-      this.personagem.set(encontrado);
-    } else {
-      this.router.navigate(['/personagens']);
-    }
+    this.service.obterPorId(id).subscribe({
+      next: (encontrado) => {
+        this.personagem.set(encontrado);
+        this.carregando.set(false);
+      },
+      error: () => {
+        this.carregando.set(false);
+        this.erro.set('Não foi possível carregar o personagem. Verifique se o backend está rodando.');
+        this.router.navigate(['/personagens']);
+      }
+    });
   }
 
   onSalvar() {
     const atual = this.personagem();
-    if (!atual) {
+    if (!atual || this.salvando()) {
       return;
     }
+
+    const payload = normalizarPersonagemPayload(this.model());
+
     if (this.personagemForm().invalid()) {
       this.personagemForm().markAsTouched();
+      this.erro.set('Corrija os campos destacados antes de salvar.');
       return;
     }
-    const atualizado: Personagem = { id: atual.id, ...this.model() };
-    this.service.atualizar(atualizado);
 
-    if (this.origem === 'detalhar') {
-      this.router.navigate(['/personagens', atualizado.id, 'detalhar'], {
-        state: { personagem: atualizado }
-      });
-    } else {
-      this.router.navigate(['/personagens']);
-    }
+    const atualizado: Personagem = { id: atual.id, ...payload };
+    this.salvando.set(true);
+    this.erro.set(null);
+
+    this.service.atualizar(atualizado).subscribe({
+      next: (salvo) => {
+        this.salvando.set(false);
+        if (this.origem === 'detalhar') {
+          this.router.navigate(['/personagens', salvo.id, 'detalhar'], {
+            state: { personagem: salvo }
+          });
+        } else {
+          this.router.navigate(['/personagens']);
+        }
+      },
+      error: () => {
+        this.salvando.set(false);
+        this.erro.set('Não foi possível salvar as alterações. Verifique se o backend está rodando.');
+      }
+    });
   }
 
   cancelar() {

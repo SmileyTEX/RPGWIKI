@@ -3,8 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 
-import { Personagem } from '../../../../models/personagem';
-import { lerPersonagemDoState } from '../../../../models/personagem-route-state';
+import { Personagem, IMAGEM_PERSONAGEM_PADRAO } from '../../../../models/personagem';
 import { PersonagemService } from '../../../../services/personagem.service';
 
 @Component({
@@ -19,22 +18,27 @@ export class PersonagemDetalharComponent implements OnInit {
   private readonly service = inject(PersonagemService);
 
   personagem = signal<Personagem | null>(null);
+  carregando = signal(true);
+  imagemPadrao = IMAGEM_PERSONAGEM_PADRAO;
 
   ngOnInit() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
-    const fromState = lerPersonagemDoState();
+    this.carregarPersonagem(id);
+  }
 
-    if (fromState?.id === id) {
-      this.personagem.set(fromState);
-      return;
-    }
+  private carregarPersonagem(id: number) {
+    this.carregando.set(true);
 
-    const encontrado = this.service.obterPorId(id);
-    if (encontrado) {
-      this.personagem.set(encontrado);
-    } else {
-      this.router.navigate(['/personagens']);
-    }
+    this.service.obterPorId(id).subscribe({
+      next: (encontrado) => {
+        this.personagem.set(encontrado);
+        this.carregando.set(false);
+      },
+      error: () => {
+        this.carregando.set(false);
+        this.router.navigate(['/personagens']);
+      }
+    });
   }
 
   voltar() {
@@ -49,5 +53,10 @@ export class PersonagemDetalharComponent implements OnInit {
     this.router.navigate(['/personagens', p.id, 'alterar'], {
       state: { personagem: p, origem: 'detalhar' }
     });
+  }
+
+  usarImagemPadrao(event: Event) {
+    const img = event.target as HTMLImageElement;
+    img.src = this.imagemPadrao;
   }
 }
