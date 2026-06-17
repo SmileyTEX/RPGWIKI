@@ -1,4 +1,5 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { provideHttpClient } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 import { providePrimeNG } from 'primeng/config';
 import { definePreset } from '@primeuix/themes';
@@ -52,6 +53,7 @@ export const appConfig: ApplicationConfig = {
       }
     }),
     provideBrowserGlobalErrorListeners(),
+    provideHttpClient(),
     provideRouter(routes)
   ]
 };

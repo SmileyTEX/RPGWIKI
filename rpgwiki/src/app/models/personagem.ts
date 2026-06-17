@@ -20,6 +20,9 @@ export interface Personagem {
 
 export type PersonagemPayload = Omit<Personagem, 'id'>;
 
+export const IMAGEM_PERSONAGEM_PADRAO =
+  'https://via.placeholder.com/400x300/16161a/f97316?text=RPG+Wiki';
+
 export function criarPersonagemVazio(): PersonagemPayload {
   return {
     nome: '',
@@ -36,5 +39,26 @@ export function criarPersonagemVazio(): PersonagemPayload {
     local: '',
     faccao: '',
     idade: null
+  };
+}
+
+export function normalizarPersonagemPayload(dados: PersonagemPayload): PersonagemPayload {
+  const idadeBruta = dados.idade as unknown;
+  const idade =
+    idadeBruta === null || idadeBruta === undefined || idadeBruta === ''
+      ? null
+      : Number(idadeBruta);
+
+  return {
+    ...dados,
+    nivel: Number(dados.nivel) || 1,
+    idade: Number.isFinite(idade) ? idade : null
+  };
+}
+
+export function normalizarPersonagem(dados: Personagem): Personagem {
+  return {
+    ...normalizarPersonagemPayload(dados),
+    id: dados.id
   };
 }
