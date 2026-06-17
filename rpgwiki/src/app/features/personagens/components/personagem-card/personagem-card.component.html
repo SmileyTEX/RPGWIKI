@@ -2,12 +2,14 @@
   class="group bg-rpg-surface border border-rpg-border rounded-xl overflow-hidden
          hover:border-rpg-orange/50 hover:shadow-lg hover:shadow-rpg-orange/10
          transition-all duration-300 cursor-pointer"
-  (click)="detalhar.emit(personagem())">
+  (click)="onDetalhar($event)">
 
   <div class="relative aspect-[4/3] overflow-hidden">
     <img
-      [src]="personagem().imagem || 'https://via.placeholder.com/400x300/16161a/f97316?text=RPG+Wiki'"
+      [src]="imagemExibida()"
       [alt]="'Retrato de ' + personagem().nome"
+      referrerpolicy="no-referrer"
+      (error)="usarImagemPadrao($event)"
       class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
     />
 
@@ -66,24 +68,27 @@
 
       <div class="flex gap-1">
         <button
+          type="button"
           pButton
           icon="pi pi-eye"
           class="p-button-text p-button-sm !text-rpg-muted hover:!text-rpg-orange"
-          (click)="detalhar.emit(personagem())"
+          (click)="onDetalhar($event)"
           aria-label="Ver detalhes">
         </button>
         <button
+          type="button"
           pButton
           icon="pi pi-pencil"
           class="p-button-text p-button-sm !text-rpg-muted hover:!text-rpg-orange"
-          (click)="editar.emit(personagem())"
+          (click)="onEditar($event)"
           aria-label="Editar personagem">
         </button>
         <button
+          type="button"
           pButton
           icon="pi pi-trash"
           class="p-button-text p-button-sm p-button-danger"
-          (click)="remover.emit(personagem().id)"
+          (click)="onRemover($event)"
           aria-label="Remover personagem">
         </button>
       </div>

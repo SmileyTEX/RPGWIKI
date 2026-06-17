@@ -7,6 +7,7 @@
   </div>
 
   <button
+    type="button"
     pButton
     label="Novo Personagem"
     icon="pi pi-plus"
@@ -14,11 +15,22 @@
   </button>
 </div>
 
-@if (personagens().length === 0) {
+@if (erro()) {
+  <div class="mb-4 rounded-lg border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-300">
+    {{ erro() }}
+  </div>
+}
+
+@if (carregando()) {
+  <div class="text-center py-16 text-rpg-muted">
+    <i class="pi pi-spin pi-spinner text-2xl"></i>
+    <p class="mt-3">Carregando personagens...</p>
+  </div>
+} @else if (personagens().length === 0) {
   <div class="text-center py-16 border border-dashed border-rpg-border rounded-xl">
     <i class="pi pi-users text-4xl text-rpg-muted mb-4"></i>
     <p class="text-rpg-muted mb-4">Nenhum personagem cadastrado ainda.</p>
-    <button pButton label="Cadastrar primeiro personagem" icon="pi pi-plus" (click)="irParaIncluir()"></button>
+    <button type="button" pButton label="Cadastrar primeiro personagem" icon="pi pi-plus" (click)="irParaIncluir()"></button>
   </div>
 } @else {
   <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">

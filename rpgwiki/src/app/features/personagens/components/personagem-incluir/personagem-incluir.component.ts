@@ -6,7 +6,11 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { SelectModule } from 'primeng/select';
 
-import { PersonagemPayload, criarPersonagemVazio } from '../../../../models/personagem';
+import {
+  PersonagemPayload,
+  criarPersonagemVazio,
+  normalizarPersonagemPayload
+} from '../../../../models/personagem';
 import { TIPOS_PERSONAGEM } from '../../../../models/tipo-personagem';
 import { PersonagemService } from '../../../../services/personagem.service';
 
@@ -21,6 +25,8 @@ export class PersonagemIncluirComponent {
   private readonly service = inject(PersonagemService);
 
   tiposPersonagem = TIPOS_PERSONAGEM;
+  salvando = signal(false);
+  erro = signal<string | null>(null);
 
   model = signal<PersonagemPayload>(criarPersonagemVazio());
 
@@ -45,12 +51,31 @@ export class PersonagemIncluirComponent {
   });
 
   onSalvar() {
-    if (this.personagemForm().invalid()) {
-      this.personagemForm().markAsTouched();
+    if (this.salvando()) {
       return;
     }
-    this.service.adicionar(this.model());
-    this.router.navigate(['/personagens']);
+
+    const payload = normalizarPersonagemPayload(this.model());
+
+    if (this.personagemForm().invalid()) {
+      this.personagemForm().markAsTouched();
+      this.erro.set('Corrija os campos destacados antes de salvar.');
+      return;
+    }
+
+    this.salvando.set(true);
+    this.erro.set(null);
+
+    this.service.adicionar(payload).subscribe({
+      next: () => {
+        this.salvando.set(false);
+        this.router.navigate(['/personagens']);
+      },
+      error: () => {
+        this.salvando.set(false);
+        this.erro.set('Não foi possível salvar o personagem. Verifique se o backend está rodando.');
+      }
+    });
   }
 
   onCancelar() {
