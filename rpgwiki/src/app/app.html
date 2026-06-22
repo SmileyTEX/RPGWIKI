@@ -1,25 +1,42 @@
 <div class="min-h-screen bg-rpg-bg">
-  <header class="border-b border-rpg-border bg-rpg-surface/80 backdrop-blur-sm sticky top-0 z-10">
-    <div class="max-w-7xl mx-auto px-6 py-4">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-lg bg-rpg-orange/20 border border-rpg-orange/40 flex items-center justify-center">
-          <i class="pi pi-book text-rpg-orange text-lg"></i>
-        </div>
-        <div>
-          <h1 class="text-2xl font-bold text-rpg-text tracking-tight">RPG Wiki</h1>
-          <p class="text-sm text-rpg-muted">Enciclopédia das campanhas · Personagens</p>
+  @if (!estaNaLogin()) {
+    <header class="border-b border-rpg-border bg-rpg-surface/80 backdrop-blur-sm sticky top-0 z-10">
+      <div class="max-w-7xl mx-auto px-6 py-4">
+        <div class="flex items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-rpg-orange/20 border border-rpg-orange/40 flex items-center justify-center">
+              <i class="pi pi-book text-rpg-orange text-lg"></i>
+            </div>
+            <div>
+              <h1 class="text-2xl font-bold text-rpg-text tracking-tight">RPG Wiki</h1>
+              <p class="text-sm text-rpg-muted">Enciclopédia das campanhas · Personagens</p>
+            </div>
+          </div>
+
+          @if (autenticado()) {
+            <button
+              type="button"
+              pButton
+              label="Sair"
+              icon="pi pi-sign-out"
+              class="p-button-outlined p-button-sm"
+              (click)="sair()">
+            </button>
+          }
         </div>
       </div>
-    </div>
-  </header>
+    </header>
+  }
 
-  <main class="max-w-7xl mx-auto px-6 py-8">
+  <main [class]="estaNaLogin() ? 'min-h-screen w-full flex items-center justify-center px-6' : 'max-w-7xl mx-auto px-6 py-8'">
     <router-outlet />
   </main>
 
-  <footer class="border-t border-rpg-border mt-12">
-    <div class="max-w-7xl mx-auto px-6 py-4 text-center text-xs text-rpg-muted">
-      RPG Wiki — Centralizando o conhecimento do universo compartilhado do grupo
-    </div>
-  </footer>
+  @if (!estaNaLogin()) {
+    <footer class="border-t border-rpg-border mt-12">
+      <div class="max-w-7xl mx-auto px-6 py-4 text-center text-xs text-rpg-muted">
+        RPG Wiki — Centralizando o conhecimento do universo compartilhado do grupo
+      </div>
+    </footer>
+  }
 </div>
