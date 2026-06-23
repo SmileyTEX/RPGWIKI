@@ -1,0 +1,57 @@
+<div class="w-full bg-rpg-surface border border-rpg-border p-8 rounded-2xl shadow-xl">
+    <div class="text-center mb-8">
+      <div class="w-14 h-14 mx-auto rounded-xl bg-rpg-orange/20 border border-rpg-orange/40 flex items-center justify-center mb-4">
+        <i class="pi pi-lock text-rpg-orange text-2xl"></i>
+      </div>
+      <h2 class="text-2xl font-bold text-rpg-text">Entrar na RPG Wiki</h2>
+      <p class="text-sm text-rpg-muted mt-2">Use suas credenciais para acessar a enciclopédia</p>
+    </div>
+
+    @if (erro()) {
+      <div class="mb-4 rounded-lg border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-300">
+        {{ erro() }}
+      </div>
+    }
+
+    <form (submit)="$event.preventDefault(); onEntrar()" class="space-y-5">
+      <div>
+        <label class="form-label" for="username">Nome de usuário</label>
+        <input
+          id="username"
+          pInputText
+          [formField]="loginForm.username"
+          placeholder="Digite seu usuário"
+          autocomplete="username"
+          class="w-full"
+        />
+        @if (loginForm.username().touched() && loginForm.username().invalid()) {
+          <small class="form-error">{{ loginForm.username().errors()[0]?.message }}</small>
+        }
+      </div>
+
+      <div>
+        <label class="form-label" for="password">Senha</label>
+        <input
+          id="password"
+          type="password"
+          pInputText
+          [formField]="loginForm.password"
+          placeholder="Digite sua senha"
+          autocomplete="current-password"
+          class="w-full"
+        />
+        @if (loginForm.password().touched() && loginForm.password().invalid()) {
+          <small class="form-error">{{ loginForm.password().errors()[0]?.message }}</small>
+        }
+      </div>
+
+      <button
+        type="submit"
+        pButton
+        [label]="autenticando() ? 'Entrando...' : 'Entrar'"
+        icon="pi pi-sign-in"
+        class="w-full"
+        [loading]="autenticando()">
+      </button>
+    </form>
+</div>
